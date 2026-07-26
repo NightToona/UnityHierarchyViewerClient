@@ -1,11 +1,15 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin require-restart="true">
     <id>com.github.nighttoona.unityhierarchyviewerclient</id>
-    <name>UnityHierarchyViewerClient</name>
-    <vendor>nighttoona</vendor>
+    <name>Unity Hierarchy Viewer</name>
+    <vendor url="https://github.com/NightToona">NightToona</vendor>
     <description><![CDATA[
-        <p><b>UnityHierarchyViewerClient</b> is a repository that provides a pure template to make it easier to create a new plugin project.</p>
-        <p>The main goal of this template is to speed up the setup phase of plugin development for both new and experienced developers by preconfiguring the project scaffold and CI, linking to the proper documentation pages, and keeping everything organized.</p>
+        <h2>插件用途</h2>
+        <p><b>Unity Hierarchy Viewer</b> 是一款用于辅助 Unity 开发的 IDE 插件，旨在让开发者在 Rider 中直接查看 Unity Hierarchy 信息，减少 Unity Editor 与代码编辑环境之间的频繁切换，从而优化脚本开发过程中的工作流。</p>
+        <p>通过 Unity Editor 扩展监听 Hierarchy 数据变化，并通过 TCP 通信同步至 Rider 插件，在 IDE 中实时展示 Unity Hierarchy 信息。</p>
+        <h2>Plugin Usage</h2>
+        <p><b>Unity Hierarchy Viewer</b> is an IDE plugin specifically designed to assist Unity developers. It enables developers to directly view Unity Hierarchy information within Rider, reducing the need for frequent switching between the Unity Editor and the code editing environment, thereby optimizing the workflow during script development.</p>
+        <p>By using the Unity Editor extension to monitor the changes in the Hierarchy data, and synchronizing it to the Rider plugin via TCP communication, the Unity Hierarchy information can be displayed in real time within the IDE.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
@@ -13,7 +17,7 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.nighttoona.unityhierarchyviewerclient.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="com.github.nighttoona.unityhierarchyviewerclient.toolWindow.MyToolWindowFactory" id="Unity Hierarchy View"/>
         <postStartupActivity implementation="com.github.nighttoona.unityhierarchyviewerclient.startup.MyProjectActivity" />
     </extensions>
 </idea-plugin>
