@@ -10,6 +10,7 @@ import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
 import com.github.nighttoona.unityhierarchyviewerclient.MyBundle
 import com.github.nighttoona.unityhierarchyviewerclient.services.MyProjectService
+import com.intellij.ui.components.JBList
 import javax.swing.JButton
 
 
@@ -40,6 +41,11 @@ class MyToolWindowFactory : ToolWindowFactory {
                     label.text = MyBundle["randomLabel", service.getRandomNumber()]
                 }
             })
+
+
+            add(JBList("00000"))
+            val label1 = JBLabel("Testtretsy Hello.")
+            add(label1, 1)
         }
     }
 }
