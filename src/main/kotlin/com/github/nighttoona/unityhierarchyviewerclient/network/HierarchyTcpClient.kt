@@ -34,7 +34,7 @@ class HierarchyTcpClient {
 
     // 只用于负责连接操作，避免各类状态干扰造成的锁死或异常
     // 对该方法启用额外的IO线程池，避免阻塞主线程
-    private suspend fun connect(host: String, port: Int): Boolean = withContext(Dispatchers.IO){
+    private suspend fun connect(host: String, port: Int): Boolean = withContext(Dispatchers.IO) {
 
         val newSocket = Socket()
 
@@ -58,7 +58,6 @@ class HierarchyTcpClient {
     }
 
 
-
     // 运行客户端，保持连接并接收消息
     suspend fun run(host: String, port: Int) {
 
@@ -69,13 +68,22 @@ class HierarchyTcpClient {
         }
 
         isRunning = true
+        var failedAttempts = 0
 
         try {
             while (isRunning) {
 
                 if (connect(host, port)) {
+
+                    failedAttempts = 0
                     receiveLoop()
+
+                } else {
+                    failedAttempts++
+                    println("连接失败，尝试次数：$failedAttempts")
+                    if (failedAttempts >= 3) break
                 }
+
 
                 if (isRunning) {
                     // 等待5秒后重新连接
@@ -85,12 +93,12 @@ class HierarchyTcpClient {
             }
         } finally {
 
+            println("已停止运行")
             stop()
             runMutex.unlock()
         }
 
     }
-
 
 
     private suspend fun receiveLoop() {
@@ -159,7 +167,6 @@ class HierarchyTcpClient {
         socket = null
         currentSocket?.close()
     }
-
 
 
     // 读取消息，返回TcpMessage对象
