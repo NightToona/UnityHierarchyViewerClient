@@ -3,6 +3,7 @@ package com.github.nighttoona.unityhierarchyviewerclient.network
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
 import java.io.DataInputStream
@@ -23,6 +24,7 @@ class HierarchyTcpClient {
     private var socket: Socket? = null
 
     private val runMutex = Mutex()
+    private val sendMutex = Mutex()
 
     // 控制连接状态的标志位，@Volatile允许跨线程访问
     @Volatile
@@ -124,6 +126,8 @@ class HierarchyTcpClient {
 
                         MessageType.HEARTBEAT_PING.code -> {
                             println("收到心跳响应")
+                            sendMessage(MessageType.HEARTBEAT_PONG)
+                            println("心跳回复已发送")
                         }
 
                         MessageType.CLOSE.code -> {
@@ -156,6 +160,28 @@ class HierarchyTcpClient {
         }
 
     }
+
+
+    // 发送消息，使用互斥锁保证线程安全
+    private suspend fun sendMessage(type: MessageType, body: String = ""){
+
+        val bodyByte = body.toByteArray(Charsets.UTF_8)
+        val headerByte = "[${type.code}][${bodyByte.size}]".toByteArray(Charsets.UTF_8)
+        val messageByte = headerByte + bodyByte
+
+        withContext(Dispatchers.IO){
+            sendMutex.withLock {
+
+                val currentSocket = socket ?: return@withLock
+                val output = currentSocket.getOutputStream()
+
+                output.write(messageByte)
+                output.flush()
+            }
+        }
+
+    }
+
 
     // 停止客户端，关闭连接
     private fun stop() {
