@@ -11,6 +11,9 @@ import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyListen
 import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyService
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.service
+import com.intellij.ui.components.JBScrollPane
+import java.awt.BorderLayout
+import javax.swing.tree.DefaultTreeModel
 
 
 class MyToolWindowFactory : ToolWindowFactory {
@@ -28,11 +31,12 @@ class MyToolWindowFactory : ToolWindowFactory {
 
         private val hierarchyService = toolWindow.project.service<HierarchyService>()
         private val sceneJBLabel = JBLabel("等待 Unity Hierarchy 数据……")
+        private val hierarchyTree = HierarchyTree()
 
 
         private val hierarchyListener = object : HierarchyListener{
             override fun onChange(data: HierarchyData) {
-                sceneJBLabel.text = "当前场景: ${data.sceneName}"
+                hierarchyTree.model = hierarchyTree.buildHierarchyTree(data)
             }
         }
 
@@ -40,6 +44,12 @@ class MyToolWindowFactory : ToolWindowFactory {
         init {
             // 初始化监听器
             hierarchyService.addListener(hierarchyListener)
+
+            // 调节树的显示效果
+            hierarchyTree.showsRootHandles = true
+            hierarchyTree.rowHeight = 0
+            hierarchyTree.model = DefaultTreeModel(null)
+            hierarchyTree.emptyText.text = "等待 Unity Hierarchy 端数据响应……"
         }
 
         override fun dispose(){
@@ -48,9 +58,9 @@ class MyToolWindowFactory : ToolWindowFactory {
         }
 
 
-        fun getContent() = JBPanel<JBPanel<*>>().apply {
+        fun getContent() = JBPanel<JBPanel<*>>(BorderLayout()).apply {
 
-            add(sceneJBLabel)
+            add(JBScrollPane(hierarchyTree))
 
         }
     }
