@@ -1,51 +1,57 @@
 package com.github.nighttoona.unityhierarchyviewerclient.toolWindow
 
-import com.intellij.openapi.components.service
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
-import com.github.nighttoona.unityhierarchyviewerclient.MyBundle
-import com.github.nighttoona.unityhierarchyviewerclient.services.MyProjectService
-import com.intellij.ui.components.JBList
-import javax.swing.JButton
+import com.github.nighttoona.unityhierarchyviewerclient.parser.HierarchyData
+import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyListener
+import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyService
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.components.service
 
 
 class MyToolWindowFactory : ToolWindowFactory {
 
-    init {
-        thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
-    }
-
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val myToolWindow = MyToolWindow(toolWindow)
         val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), null, false)
+        content.setDisposer(myToolWindow)
         toolWindow.contentManager.addContent(content)
     }
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class MyToolWindow(toolWindow: ToolWindow) {
+    class MyToolWindow(toolWindow: ToolWindow): Disposable {
 
-        private val service = toolWindow.project.service<MyProjectService>()
+        private val hierarchyService = toolWindow.project.service<HierarchyService>()
+        private val sceneJBLabel = JBLabel("等待 Unity Hierarchy 数据……")
+
+
+        private val hierarchyListener = object : HierarchyListener{
+            override fun onChange(data: HierarchyData) {
+                sceneJBLabel.text = "当前场景: ${data.sceneName}"
+            }
+        }
+
+
+        init {
+            // 初始化监听器
+            hierarchyService.addListener(hierarchyListener)
+        }
+
+        override fun dispose(){
+            // 销毁监听器
+            hierarchyService.removeListener(hierarchyListener)
+        }
+
 
         fun getContent() = JBPanel<JBPanel<*>>().apply {
-            val label = JBLabel(MyBundle["randomLabel", "?"])
 
-            add(label)
-            add(JButton(MyBundle["shuffle"]).apply {
-                addActionListener {
-                    label.text = MyBundle["randomLabel", service.getRandomNumber()]
-                }
-            })
+            add(sceneJBLabel)
 
-
-            add(JBList("00000"))
-            val label1 = JBLabel("Testtretsy Hello.")
-            add(label1, 1)
         }
     }
 }

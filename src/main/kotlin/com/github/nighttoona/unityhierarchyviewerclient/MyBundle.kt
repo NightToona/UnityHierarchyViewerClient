@@ -9,6 +9,7 @@ private const val BUNDLE = "messages.MyBundle"
 
 object MyBundle : DynamicBundle(BUNDLE) {
 
+    /*
     operator fun get(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
         getMessage(key, *params)
 
@@ -20,4 +21,6 @@ object MyBundle : DynamicBundle(BUNDLE) {
     @JvmStatic
     fun messagePointer(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
         getLazyMessage(key, *params)
+
+     */
 }

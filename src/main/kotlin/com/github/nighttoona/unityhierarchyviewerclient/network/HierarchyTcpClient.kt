@@ -1,5 +1,6 @@
 package com.github.nighttoona.unityhierarchyviewerclient.network
 
+import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
@@ -19,7 +20,7 @@ data class TcpMessage(
 )
 
 
-class HierarchyTcpClient {
+class HierarchyTcpClient(private val hierarchyService: HierarchyService) {
 
     private var socket: Socket? = null
 
@@ -120,6 +121,8 @@ class HierarchyTcpClient {
 
                     when (message.typeCode) {
                         MessageType.XML.code -> {
+                            // 调用监听器用于刷新UI效果
+                            hierarchyService.updateHierarchy(message.body)
                             println(message.body)
                             println("XML消息")
                         }
