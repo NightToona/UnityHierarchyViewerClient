@@ -1,6 +1,8 @@
 package com.github.nighttoona.unityhierarchyviewerclient.network
 
 import com.github.nighttoona.unityhierarchyviewerclient.services.HierarchyService
+import com.intellij.notification.NotificationType
+import com.jetbrains.rider.completion.showNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
@@ -15,8 +17,7 @@ import java.net.Socket
 
 
 data class TcpMessage(
-    val typeCode: Int,
-    val body: String
+    val typeCode: Int, val body: String
 )
 
 
@@ -78,13 +79,21 @@ class HierarchyTcpClient(private val hierarchyService: HierarchyService) {
 
                 if (connect(host, port)) {
 
+                    hierarchyService.showNotification("已连接到Unity", NotificationType.INFORMATION)
                     failedAttempts = 0
                     receiveLoop()
 
                 } else {
                     failedAttempts++
                     println("连接失败，尝试次数：$failedAttempts")
-                    if (failedAttempts >= 3) break
+                    if (failedAttempts >= 3) {
+
+                        hierarchyService.showNotification(
+                            "Hierarchy Viewer 无法连接到Unity，请确认后尝试重连", NotificationType.WARNING
+                        )
+                        break
+
+                    }
                 }
 
 
@@ -124,7 +133,6 @@ class HierarchyTcpClient(private val hierarchyService: HierarchyService) {
                             // 调用监听器用于刷新UI效果
                             hierarchyService.updateHierarchy(message.body)
                             println(message.body)
-                            println("XML消息")
                         }
 
                         MessageType.HEARTBEAT_PING.code -> {
@@ -134,6 +142,7 @@ class HierarchyTcpClient(private val hierarchyService: HierarchyService) {
                         }
 
                         MessageType.CLOSE.code -> {
+                            isConnected = false
                             println("收到关闭消息，断开连接")
                         }
 
@@ -166,13 +175,13 @@ class HierarchyTcpClient(private val hierarchyService: HierarchyService) {
 
 
     // 发送消息，使用互斥锁保证线程安全
-    private suspend fun sendMessage(type: MessageType, body: String = ""){
+    private suspend fun sendMessage(type: MessageType, body: String = "") {
 
         val bodyByte = body.toByteArray(Charsets.UTF_8)
         val headerByte = "[${type.code}][${bodyByte.size}]".toByteArray(Charsets.UTF_8)
         val messageByte = headerByte + bodyByte
 
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             sendMutex.withLock {
 
                 val currentSocket = socket ?: return@withLock

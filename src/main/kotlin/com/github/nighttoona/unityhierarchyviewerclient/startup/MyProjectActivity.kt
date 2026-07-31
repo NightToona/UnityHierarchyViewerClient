@@ -14,8 +14,7 @@ class MyProjectActivity : ProjectActivity {
         // 从当前项目的统一管理容器里，取得那个共享实例
         val hierarchyService = project.service<HierarchyService>()
 
-        val tcpClient = HierarchyTcpClient(hierarchyService)
-
-        tcpClient.run("127.0.0.1", 44571)
+        // 供全局使用的TCP客户端运行实例
+        hierarchyService.runClient()
     }
 }

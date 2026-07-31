@@ -6,7 +6,7 @@
 
 [![Build](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml/badge.svg)](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml)
 [![Unity Package](https://img.shields.io/badge/Unity-Package-222C37?logo=unity)](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)
-![Version](https://img.shields.io/badge/version-0.1.1-blue)
+![Version](https://img.shields.io/badge/version-0.5.1-blue)
 ![Status](https://img.shields.io/badge/status-work%20in%20progress-orange)
 
 </div>

@@ -19,5 +19,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.nighttoona.unityhierarchyviewerclient.toolWindow.MyToolWindowFactory" id="Unity Hierarchy View"/>
         <postStartupActivity implementation="com.github.nighttoona.unityhierarchyviewerclient.startup.MyProjectActivity" />
+        <notificationGroup displayType="BALLOON" id="Unity Hierarchy Viewer" isLogByDefault="true"/>
     </extensions>
 </idea-plugin>
