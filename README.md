@@ -1,45 +1,79 @@
-# UnityHierarchyViewerClient
+<div align="center">
 
-![Build](https://github.com/NightToona/UnityHierarchyViewerClient/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+# Unity Hierarchy Viewer
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [group](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml), [name](./src/main/resources/META-INF/plugin.xml), and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin [description](./src/main/resources/META-INF/plugin.xml) (see [Tips][docs:plugin-description]) and this README to describe what your plugin does.
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
+在 JetBrains Rider 中实时查看 Unity 场景层级
 
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
+[![Build](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml/badge.svg)](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml)
+[![Unity Package](https://img.shields.io/badge/Unity-Package-222C37?logo=unity)](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)
+![Version](https://img.shields.io/badge/version-0.1.1-blue)
+![Status](https://img.shields.io/badge/status-work%20in%20progress-orange)
 
-## Installation
+</div>
 
-- Using the IDE built-in plugin system:
+## 项目简介
 
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "UnityHierarchyViewerClient"</kbd> >
-  <kbd>Install</kbd>
+**Unity Hierarchy Viewer** 是一款 Rider 插件，用于在 Rider 中查看 Unity
+场景的 Hierarchy，减少写脚本时来回切换 Unity Editor 的次数。
 
-- Using JetBrains Marketplace:
+插件通过 TCP 接收 Unity 端发送的数据，并在工具窗口中显示 GameObject 的层级结构。
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+更多细节请查看开发笔记：[Project - Hierarchy Tool](https://github.com/NightToona/UnityClient-Engineering-Notes/blob/0089f13df53eada2bcab9eb2dff6a382e4bb3bfd/Projects/Project%201%20-%20Hierarchy%20Tool.md)
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+> [!IMPORTANT]
+> 项目还在开发中，目前没有发布到 JetBrains Marketplace。
+> 使用时需要配合
+> [Unity Package](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)。
 
-- Manually:
+## 功能
 
-  Download the [latest release](https://github.com/NightToona/UnityHierarchyViewerClient/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+- 在 Rider 中显示 Unity Hierarchy
+- 按父子关系展示 GameObject
+- Unity Hierarchy 变化时自动刷新
+- 支持心跳和断线重连（完善中）
 
+## 安装
+
+先在 Unity 项目中安装配套的
+[com.nighttoona.idehierarchyviewer](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)。
+
+Rider 插件目前需要从源码构建，环境需要 **JDK 17**：
+
+```powershell
+.\gradlew.bat buildPlugin
+```
+
+构建完成后，在 `build/distributions/` 中找到插件 ZIP，然后在 Rider 中选择：
+
+```text
+Settings → Plugins → ⚙ → Install Plugin from Disk...
+```
+
+## 使用
+
+1. 启动 Unity 端。
+2. 启动 Rider 并打开 `Unity Hierarchy View` 工具窗口。
+3. 收到 Unity 端的数据后，Hierarchy 会自动显示并更新。
+
+目前通信地址固定为 `127.0.0.1:44571`，建议先启动 Unity 端，再启动 Rider。
+
+## 开发进度
+
+- [x] Rider 与 Unity 之间的 TCP 通信
+- [x] 解析 Unity Hierarchy 数据
+- [x] 在 Rider 中显示和刷新层级树
+- [ ] 完善连接状态与重连
+- [ ] 优化 GameObject 的显示效果
+- [ ] 支持自定义地址和端口
+- [ ] 发布到 JetBrains Marketplace
+
+## 最后
+
+如果发现问题，欢迎在 [Issues](https://github.com/NightToona/UnityHierarchyViewerClient/issues)
+中告诉我。
 
 ---
-Plugin based on the [IntelliJ Platform Plugin Template][template].
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+本项目基于
+[IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
+创建。
