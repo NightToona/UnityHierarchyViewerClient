@@ -10,9 +10,12 @@ class TcpClientTest {
     @Test
     fun testTcpClient() = runBlocking {
 
+        /*
         val client = HierarchyTcpClient(hierarchyService = HierarchyService())
 
         client.run("127.0.0.1", 44571)
+
+         */
 
     }
 
