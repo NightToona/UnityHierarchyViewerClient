@@ -1,36 +1,45 @@
 <div align="center">
 
-# Unity Hierarchy Viewer
+# Unity Hierarchy Viewer Rider Plugin
 
 在 JetBrains Rider 中实时查看 Unity 场景层级
 
 [![Build](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml/badge.svg)](https://github.com/NightToona/UnityHierarchyViewerClient/actions/workflows/build.yml)
 [![Unity Package](https://img.shields.io/badge/Unity-Package-222C37?logo=unity)](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)
 ![Version](https://img.shields.io/badge/version-0.5.1-blue)
-![Status](https://img.shields.io/badge/status-work%20in%20progress-orange)
+![Status](https://img.shields.io/badge/status-MVP%20completed-success)
 
 </div>
 
 ## 项目简介
 
-**Unity Hierarchy Viewer** 是一款 Rider 插件，用于在 Rider 中查看 Unity
-场景的 Hierarchy，减少写脚本时来回切换 Unity Editor 的次数。
+**Unity Hierarchy Viewer Rider Plugin** 是一个 Rider 插件，用于将 Unity Editor 中的 Hierarchy 数据实时同步到 JetBrains IDE，并提供树形结构查看能力。
 
-插件通过 TCP 接收 Unity 端发送的数据，并在工具窗口中显示 GameObject 的层级结构。
+插件作为 Unity Editor 扩展的配套客户端，通过 TCP 接收 Unity 端发送的数据，解析 XML 数据并在 Rider Tool Window 中展示。
+
+实时同步效果：
+
+<img width="460" height="259" alt="Hierarchy" src="https://github.com/user-attachments/assets/cd93add4-e49c-42ee-9c87-9de2b7a491ee" />
+
 
 更多细节请查看开发笔记：[Project - Hierarchy Tool](https://github.com/NightToona/UnityClient-Engineering-Notes/blob/0089f13df53eada2bcab9eb2dff6a382e4bb3bfd/Projects/Project%201%20-%20Hierarchy%20Tool.md)
 
-> [!IMPORTANT]
-> 项目还在开发中，目前没有发布到 JetBrains Marketplace。
-> 使用时需要配合
-> [Unity Package](https://github.com/NightToona/com.nighttoona.idehierarchyviewer)。
+> 当前版本已完成 Unity ↔ Rider 数据同步链路。
+>
+> 后续计划：
+> - 发布 JetBrains Marketplace
+> - UI展示优化
+> - 更多配置支持
 
 ## 功能
 
-- 在 Rider 中显示 Unity Hierarchy
-- 按父子关系展示 GameObject
-- Unity Hierarchy 变化时自动刷新
-- 支持心跳和断线重连（完善中）
+- Unity Hierarchy 实时同步
+- GameObject 父子结构树形展示
+- XML 数据解析与模型映射
+- 基于 TCP 的跨进程通信
+- 心跳检测与连接状态管理
+- Kotlin Coroutines 异步通信处理
+- Rider Tool Window 集成
 
 ## 安装
 
@@ -57,15 +66,22 @@ Settings → Plugins → ⚙ → Install Plugin from Disk...
 
 目前通信地址固定为 `127.0.0.1:44571`，建议先启动 Unity 端，再启动 Rider。
 
-## 开发进度
+## 开发状态
 
-- [x] Rider 与 Unity 之间的 TCP 通信
-- [x] 解析 Unity Hierarchy 数据
-- [x] 在 Rider 中显示和刷新层级树
-- [ ] 完善连接状态与重连
-- [ ] 优化 GameObject 的显示效果
-- [ ] 支持自定义地址和端口
-- [ ] 发布到 JetBrains Marketplace
+### 已完成
+
+- Rider Plugin 基础框架搭建
+- Unity Hierarchy 数据接收
+- XML 数据解析
+- Tree UI 展示
+- TCP 通信
+- 心跳检测与连接状态管理
+
+### 未来计划
+
+- UI显示优化
+- 多客户端支持
+- JetBrains Marketplace 发布
 
 ## 最后
 
