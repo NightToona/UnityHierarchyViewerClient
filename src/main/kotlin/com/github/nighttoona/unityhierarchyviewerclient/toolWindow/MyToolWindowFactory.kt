@@ -77,13 +77,5 @@ class MyToolWindowFactory : ToolWindowFactory {
 
 
         }
-
-
-        /*
-        fun getContent() = JBPanel<JBPanel<*>>(BorderLayout()).apply {
-
-            add(JBScrollPane(hierarchyTree))
-
-        }*/
     }
 }
